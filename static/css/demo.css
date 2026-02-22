@@ -1,0 +1,248 @@
+/* ================== GLOBAL ================== */
+body {
+  background: radial-gradient(circle at top, #0b1224 0%, #05070f 60%);
+  color: #ffffff;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  margin: 0;
+
+  /* REMOVE THESE */
+  /* height: 100vh; */
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: center; */
+
+  overflow: hidden; /* ✅ prevent page scroll */
+}
+
+
+/* ================== LAYOUT FRAME (INVISIBLE) ================== */
+.box {
+  width: min(1100px, 92vw);
+  height: min(90vh, 900px);
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 24px 28px;
+  gap: 18px;
+
+  margin: auto;
+}
+
+
+/* ================== AVATAR / CORE ================== */
+.avatar {
+  display: flex;
+  justify-content: center;
+}
+
+.core {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+
+  background: radial-gradient(
+    circle at 30% 30%,
+    #7dd3fc,
+    #0ea5e9,
+    #020617
+  );
+
+  box-shadow:
+    0 0 20px rgba(56,189,248,0.6),
+    0 0 60px rgba(56,189,248,0.35),
+    inset 0 0 14px rgba(255,255,255,0.25);
+
+  animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,100% { transform: scale(1); opacity: .9; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+
+@keyframes messageIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================== CHAT ================== */
+.chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow: hidden;
+  padding: 8px 0;
+  scroll-behavior: smooth;
+  overflow-y: visible; /* allow natural growth */
+}
+
+
+/* ================== MESSAGE ROW ================== */
+.msg {
+  display: flex;
+  width: 100%;
+  animation: messageIn .35s ease forwards;
+}
+
+/* USER = LEFT */
+.msg.user {
+  justify-content: flex-start;
+}
+
+/* OMINEX = RIGHT */
+.msg.bot {
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+/* ================== BUBBLES ================== */
+.bubble {
+  max-width: 64%;
+  padding: 16px 18px;
+
+  font-size: 14.5px;
+  line-height: 1.65;
+
+  border-radius: 18px;
+  position: relative;
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+
+/* USER BUBBLE */
+.msg.user .bubble {
+  background: rgba(17, 5, 238, 0.08);
+  border: 1px solid rgba(40, 10, 232, 0.958);
+  color: #e3e2ee;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.08),
+    0 12px 36px rgba(0,0,0,0.45);
+
+  border-radius: 18px 18px 18px 6px;
+}
+
+.msg .bubble:hover {
+  transform: translateY(-1px);
+}
+
+
+/* OMINEX BUBBLE */
+.msg.bot .bubble {
+  background: linear-gradient(
+    180deg,
+    rgba(56,189,248,0.22),
+    rgba(2,132,199,0.10)
+  );
+
+  border: 1px solid rgba(56,189,248,0.45);
+  color: #ffffff;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(56,189,248,0.15),
+    0 0 40px rgba(56,189,248,0.35),
+    0 20px 60px rgba(0,0,0,0.55);
+
+  border-radius: 18px 18px 6px 18px;
+}
+
+
+/* ================== INPUT ================== */
+input {
+  margin-top: 8px;
+  width: 100%;
+
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #e5e7eb;
+
+  background: rgba(15,23,42,0.9);
+  border: 1px solid rgba(56,189,248,0.25);
+  border-radius: 14px;
+
+  outline: none;
+}
+
+input::placeholder {
+  color: #94a3b8;
+}
+
+input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 2px rgba(56,189,248,0.25);
+}
+
+/* ================== SCROLLBAR ================== */
+.chat::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat::-webkit-scrollbar-thumb {
+  background: rgba(56,189,248,0.25);
+  border-radius: 10px;
+}
+
+.msg.bot .bubble::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  background: radial-gradient(circle, rgba(56,189,248,0.18), transparent 70%);
+  z-index: -1;
+}
+
+/* ===== OMINEX DEMO ONLY ===== */
+
+.ominex-demo {
+  height: 100vh;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(
+    circle at top,
+    rgba(0, 255, 255, 0.08),
+    transparent 60%
+  ), #020617;
+}
+
+/* Avatar / header always visible */
+.ominex-demo-top {
+  flex-shrink: 0;
+  padding: 20px;
+}
+
+/* THIS is the only scrolling area */
+.ominex-demo-chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Input never disappears */
+.ominex-demo-input {
+  flex-shrink: 0;
+  padding: 16px 20px;
+  border-top: 1px solid rgba(0,255,255,0.2);
+  background: rgba(2,6,23,0.9);
+}
+
+/* Message safety */
+.ominex-bubble {
+  max-width: 70%;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
