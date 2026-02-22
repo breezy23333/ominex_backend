@@ -1,7 +1,6 @@
 
 # core/brain.py — OMINEX Core Brain (CLEAN STABLE)
 # Single entry: think()
-from services.llm import ask_ominex
 from typing import Any, Dict, Optional, Tuple, List
 import re
 import requests
@@ -273,11 +272,9 @@ def think(user_text: str,
                 pass
 
         if not reply:
-            try:
-                reply = ask_ominex(user_text)
-                intent = "chat"
-            except Exception as e:
-                reply = "AI system is temporarily unavailable."
+            # Safe fallback so Render never crashes
+            reply = conversational_response(user_text)
+            intent = "chat"
 
 
     # Save assistant turn
