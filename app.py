@@ -8,8 +8,12 @@ CORS(app, resources={r"/api/*": {"origins": "*"}})
 # ---------- HEALTH ----------
 @app.get("/api/ping")
 def ping():
-    return jsonify({"status": "ok"})
-
+    return jsonify({
+        "ok": True,
+        "service": "ominex-backend",
+        "mode": "alive"
+    })
+    
 @app.get("/")
 def home():
     return jsonify({"service": "OMINEX backend online"})
