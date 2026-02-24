@@ -2,45 +2,32 @@ import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-from core.brain import think
-
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-# ---------------- HEALTH ----------------
-
+# ---------- HEALTH ----------
 @app.get("/api/ping")
 def ping():
-    return jsonify(ok=True)
+    return jsonify({"status": "ok"})
 
 @app.get("/")
 def home():
-    return jsonify(status="OMINEX backend online")
+    return jsonify({"service": "OMINEX backend online"})
 
-# ---------------- CHAT CORE ----------------
+# ---------- CHAT ----------
+def _handle_chat(user_msg: str, demo=False):
+    from core.brain import think  # 🔥 MOVED HERE
 
-def _handle_chat(user_msg: str, demo: bool = False):
     user_msg = (user_msg or "").strip()
-
     if not user_msg:
         return jsonify({"reply": "Say something to begin."}), 400
 
-    blocked = ["trade", "alert", "learn", "backtest", "delete", "memory", "portfolio save"]
-    if demo and any(word in user_msg.lower() for word in blocked):
-        return jsonify({
-            "reply": "This feature is disabled in demo mode.",
-            "mode": "demo"
-        })
-
     result = think(user_msg)
-
     return jsonify({
-        "reply": result.get("reply", "No reply"),
+        "reply": result.get("reply"),
         "mood": result.get("mood", "Neutral"),
         "mode": "demo" if demo else "live"
     })
-
-# ---------------- ROUTES ----------------
 
 @app.post("/api/chat")
 def chat():
@@ -51,8 +38,6 @@ def chat():
 def demo_chat():
     data = request.get_json(force=True) or {}
     return _handle_chat(data.get("message"), demo=True)
-
-# ---------------- ENTRY ----------------
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
